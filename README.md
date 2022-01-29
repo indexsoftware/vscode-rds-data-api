@@ -4,7 +4,7 @@
 
 > ⚠️ To use this extension, the AWS Command Line Interface must be installed on your system
 
-![Example](https://github.com/indexsoftware/vscode-rds-data-api/video.gif?raw=true)
+![Example](https://raw.githubusercontent.com/indexsoftware/vscode-rds-data-api/main/video.gif)
 
 ## Extension commands:
 

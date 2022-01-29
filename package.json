@@ -1,0 +1,59 @@
+{
+	"name": "rds-data-api",
+	"displayName": "rds-data-api",
+	"description": "Use the RDS Data API right inside vscode",
+	"version": "0.0.1",
+	"publisher": "indexsoftware",
+	"repository": "https://github.com/indexsoftware/rds-data-api",
+	"engines": {
+		"vscode": "^1.63.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+    "onStartupFinished",
+		"onCommand:extension.selectCluster",
+    "onCommand:extension.clearSelectedCluster",
+    "onCommand:extension.executeFile",
+    "onCommand:extension.executeSelection"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.selectCluster",
+				"title": "Select cluster",
+        "category": "RDS Data API"
+			},
+      {
+				"command": "extension.clearSelectedCluster",
+				"title": "Clear selected cluster",
+        "category": "RDS Data API"
+			},
+      {
+				"command": "extension.executeFile",
+				"title": "Execute file",
+        "category": "RDS Data API"
+			},
+      {
+				"command": "extension.executeSelection",
+				"title": "Execute selection",
+        "category": "RDS Data API"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./"
+	},
+	"devDependencies": {
+    "@aws-sdk/client-rds": "^3.48.0",
+    "@aws-sdk/client-rds-data": "^3.48.0",
+    "@aws-sdk/client-secrets-manager": "^3.48.0",
+		"@types/node": "^14.18.9",
+		"@types/vscode": "^1.63.0",
+		"typescript": "^4.5.5"
+	}
+}

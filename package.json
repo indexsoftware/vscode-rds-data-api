@@ -1,15 +1,16 @@
 {
 	"name": "rds-data-api",
-	"displayName": "rds-data-api",
+	"displayName": "RDS Data API",
 	"description": "Use the RDS Data API right inside vscode",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "indexsoftware",
-	"repository": "https://github.com/indexsoftware/rds-data-api",
+	"repository": "https://github.com/indexsoftware/vscode-rds-data-api",
 	"engines": {
 		"vscode": "^1.63.0"
 	},
 	"categories": [
-		"Other"
+		"Testing",
+    "Visualization"
 	],
 	"activationEvents": [
     "onStartupFinished",

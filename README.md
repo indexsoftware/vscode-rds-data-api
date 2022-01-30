@@ -15,11 +15,11 @@
   </tr>
   <tr>
     <td>Select cluster</td>
-    <td>Choose a cluster & secret based on what's available to</td>
+    <td>Choose a cluster, secret & database based on what's available to</td>
   </tr>
   <tr>
     <td>Clear selected cluster</td>
-    <td>Clear the selected cluster and secret from the global store</td>
+    <td>Clear the selected cluster, secret & database from the global store</td>
   </tr>
   <tr>
     <td>Execute file</td>

@@ -1,12 +1,17 @@
 import { ExtensionContext, commands, window, ProgressLocation, StatusBarItem } from 'vscode';
 import Base from './base';
+import OutputProvider from '../providers/OutputProvider';
 
 export default class ExecuteSelection extends Base {
   constructor(context: ExtensionContext, statusBarItem: StatusBarItem) {
     super(context, statusBarItem);
 
+    const outputProvider = new OutputProvider();
+
     commands.registerCommand('extension.executeSelection', async () => {
-      if (!this.selectedCluster || !this.selectedSecret) return window.showErrorMessage('Please select a cluster and secret first. Use the Select cluster command');
+      if (!this.selectedCluster() || !this.selectedSecret() || !this.selectedDatabase()) {
+        return window.showErrorMessage('Please select a cluster, secret and database name first. Use the Select cluster command')
+      }
 
       const editor = window.activeTextEditor;
       const selection = editor?.selection;
@@ -28,8 +33,7 @@ export default class ExecuteSelection extends Base {
           () => this.executeQuery(selectionText, parameters.value),
         );
     
-        this.outputChannel.appendLine(response instanceof Error ? response.message : JSON.stringify(response, null, 2));
-        this.outputChannel.show(true);
+        outputProvider.renderDocument(response instanceof Error ? response.message : response);
       });
     });
   }

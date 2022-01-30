@@ -1,28 +1,34 @@
-import { ExtensionContext, StatusBarItem, window, StatusBarAlignment, OutputChannel } from 'vscode';
+import { ExtensionContext, StatusBarItem } from 'vscode';
 import { exec } from 'child_process';
 import { ExecuteStatementResponse } from '@aws-sdk/client-rds-data';
 
 export default class Base {
   public context: ExtensionContext;
-  public selectedCluster?: string;
-  public selectedSecret?: string;
   public statusBarItem?: StatusBarItem;
-  public outputChannel: OutputChannel;
 
   constructor(context: ExtensionContext, statusBarItem: StatusBarItem) {
     this.context = context;
-    this.selectedCluster = context.globalState.get('selectedCluster') as string | undefined;
-    this.selectedSecret = context.globalState.get('selectedSecret') as string | undefined;
-    this.outputChannel = window.createOutputChannel('RDS Data API');
     this.statusBarItem = statusBarItem;
   }
 
-  async executeQuery(query?: string, parameters?: string) {
+  public selectedCluster() {
+    return this.context.globalState.get('selectedCluster') as string | undefined;
+  }
+
+  public selectedSecret() {
+    return this.context.globalState.get('selectedSecret') as string | undefined;
+  }
+
+  public selectedDatabase() {
+    return this.context.globalState.get('selectedDatabase') as string | undefined;
+  }
+
+  async executeQuery(query?: string, parameters?: string): Promise<ExecuteStatementResponse | object> {
     const command = this.parseQuery(`
       aws rds-data execute-statement
-      --resource-arn ${this.context.globalState.get('selectedCluster')}
-      --secret-arn ${this.context.globalState.get('selectedSecret')}
-      --database main
+      --resource-arn ${this.selectedCluster()}
+      --secret-arn ${this.selectedSecret()}
+      --database ${this.selectedDatabase()}
       --include-result-metadata
       --parameters ${JSON.stringify(parameters || '[]')}
       --sql "${query}"
@@ -35,7 +41,7 @@ export default class Base {
     
       return this.parseQueryResponse(JSON.parse(response));
     } catch (e) {
-      return e;
+      return e as object;
     }
   }
 

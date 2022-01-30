@@ -14,8 +14,9 @@ export default class ClearSelectedCluster extends Base {
         if (selection.label === 'Yes') {
           context.globalState.update('selectedCluster', undefined);
           context.globalState.update('selectedSecret', undefined);
+          context.globalState.update('selectedDatabase', undefined);
 
-          window.showInformationMessage('Selected cluster and secret cleared');
+          window.showInformationMessage('Selected cluster, secret and database cleared');
 
           if (this.statusBarItem) this.statusBarItem.text = '$(database) No cluster selected';
         } else {

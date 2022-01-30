@@ -1,5 +1,4 @@
 import { ExtensionContext, window, StatusBarAlignment } from 'vscode';
-import Base from './commands/base';
 import SelectCluster from './commands/selectCluster';
 import ExecuteFile from './commands/executeFile';
 import ExecuteSelection from './commands/executeSelection';

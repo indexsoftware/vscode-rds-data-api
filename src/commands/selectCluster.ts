@@ -8,46 +8,34 @@ export default class SelectCluster extends Base {
   constructor(context: ExtensionContext, statusBarItem: StatusBarItem) {
     super(context, statusBarItem);
 
-    commands.registerCommand('extension.selectCluster', () => {
+    commands.registerCommand('extension.selectCluster', async () => {
       const DBClustersResponse: DescribeDBClustersCommandOutput = JSON.parse(execSync('aws rds describe-db-clusters').toString() || '{}');
       const SecretsResponse: ListSecretsCommandOutput = JSON.parse(execSync('aws secretsmanager list-secrets').toString() || '{}');
       
       if (!DBClustersResponse.DBClusters) return false;
       if (!SecretsResponse.SecretList) return false;
     
-      const clusterList = window.createQuickPick();
+      const selectedCluster = await window.showQuickPick(
+        DBClustersResponse.DBClusters.map((DBCluster) => ({
+          detail: DBCluster.DBClusterArn,
+          label: DBCluster.DBClusterIdentifier || '',
+        })),
+      );
+      if (selectedCluster && selectedCluster.detail !== undefined) {
+        context.globalState.update('selectedCluster', selectedCluster.detail);
+        if (this.statusBarItem) this.statusBarItem.text = `$(database) ${selectedCluster.label}`;
+      }
     
-      clusterList.items = DBClustersResponse.DBClusters.map((DBCluster) => ({
-        detail: DBCluster.DBClusterArn,
-        label: DBCluster.DBClusterIdentifier || '',
-      }));
-    
-      const secretList = window.createQuickPick();
-      secretList.items = SecretsResponse.SecretList.map((Secret) => ({
-        detail: Secret.ARN,
-        label: Secret.Description || Secret.Name || '',
-      }));
-    
-      clusterList.onDidChangeSelection(([selection]) => {
-        if (selection && selection.detail) {
-          context.globalState.update('selectedCluster', selection.detail);
-          console.log(this.statusBarItem);
-          if (this.statusBarItem) this.statusBarItem.text = `$(database) ${selection.label}`;
-    
-          clusterList.hide();
-          secretList.show();
-        }
-      });
-    
-      secretList.onDidChangeSelection(([selection]) => {
-        if (selection && selection.detail) {
-          context.globalState.update('selectedSecret', selection.detail);
-    
-          secretList.hide();
-        }
-      });
-    
-      clusterList.show();
+      const selectedSecret = await window.showQuickPick(
+        SecretsResponse.SecretList.map((Secret) => ({
+          detail: Secret.ARN,
+          label: Secret.Description || Secret.Name || '',
+        }),
+      ));
+      if (selectedSecret && selectedSecret.detail !== undefined) context.globalState.update('selectedSecret', selectedSecret.detail);
+
+      const selectedDatabase = await window.showInputBox({ placeHolder: 'Enter the database name to finish' });
+      if (selectedDatabase !== undefined) context.globalState.update('selectedDatabase', selectedDatabase);
     });
   }
 }

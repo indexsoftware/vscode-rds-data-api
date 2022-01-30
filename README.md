@@ -18,6 +18,10 @@
     <td>Choose a cluster & secret based on what's available to</td>
   </tr>
   <tr>
+    <td>Clear selected cluster</td>
+    <td>Clear the selected cluster and secret from the global store</td>
+  </tr>
+  <tr>
     <td>Execute file</td>
     <td>Open up an .sql file, execute this command, fill in optional parameters and see the output</td>
   </tr>

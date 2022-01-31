@@ -19,14 +19,18 @@ export default class ExecuteSelection extends Base {
     
       if (selection?.isEmpty) return window.showWarningMessage('Select a valid query to use the Execute selection command');
     
+      const defaultValue = '[{ "name": "key", "value": { "stringValue": "value" }}]';
+      const savedParameters = context.globalState.get('savedParameters') as string | undefined;
       const parameters = window.createInputBox();
-      parameters.placeholder = 'Ex. [{ "name": "id", "value": { "longValue": 1 }}]';
-      parameters.prompt = 'Query parameters, skip if not needed';
+      parameters.value = savedParameters || defaultValue;
+      parameters.placeholder = `For example: ${defaultValue}`;
+      parameters.prompt = 'Query parameters';
       parameters.ignoreFocusOut = true;
     
       parameters.show();
     
       parameters.onDidAccept(async () => {
+        context.globalState.update('savedParameters', parameters.value);
         parameters.hide();
         const response = await window.withProgress(
           { location: ProgressLocation.Notification, title: 'Executing query...', cancellable: true },

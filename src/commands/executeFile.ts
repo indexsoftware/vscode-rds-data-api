@@ -18,14 +18,18 @@ export default class ExecuteFile extends Base {
 
       if (editor?.document.languageId !== 'sql') return window.showWarningMessage('Can only execute from .sql files, use Execute selection to execute part of a file');
 
+      const defaultValue = '[{ "name": "key", "value": { "stringValue": "value" }}]';
+      const savedParameters = context.globalState.get('savedParameters') as string | undefined;
       const parameters = window.createInputBox();
-      parameters.placeholder = 'For example: [{ "name": "id", "value": { "longValue": 1 }}]';
-      parameters.prompt = 'Query parameters, hit enter if not needed';
+      parameters.value = savedParameters || defaultValue;
+      parameters.placeholder = `For example: ${defaultValue}`;
+      parameters.prompt = 'Query parameters';
       parameters.ignoreFocusOut = true;
 
       parameters.show();
 
       parameters.onDidAccept(async () => {
+        context.globalState.update('savedParameters', parameters.value)
         parameters.hide();
         const response = await window.withProgress(
           { location: ProgressLocation.Notification, title: 'Executing query...', cancellable: true },

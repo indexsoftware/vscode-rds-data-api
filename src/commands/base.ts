@@ -48,17 +48,24 @@ export default class Base {
   parseQueryResponse ({ columnMetadata, records }: ExecuteStatementResponse) {
     if (!columnMetadata || !records) return [];
   
-    const columns = columnMetadata.map(({ name }) => name) as string[];
+    const columnNames = columnMetadata.map(({ name }) => name) as string[];
     const data = records.map((record) => {
-      const locaRecord: { [key: string]: number } = {};
+      const localRecord: { [key: string]: any } = {};
   
       record.map((field, index) => {
-        [locaRecord[columns[index]]] = field.isNull ? [null] : Object.values(field);
+        const column = columnMetadata.find((item) => item.name === columnNames[index]);
+
+        if (column?.name && (column?.typeName === 'jsonb' || column?.typeName === 'json')) {
+          console.log(column?.name, column?.typeName);
+          localRecord[column.name] = field.isNull ? null : JSON.parse(field.stringValue as string || '[]');
+        } else if (column?.name) {
+          [localRecord[column.name]] = field.isNull ? [null] : Object.values(field);
+        }
   
         return field;
       });
   
-      return locaRecord;
+      return localRecord;
     });
   
     return data;

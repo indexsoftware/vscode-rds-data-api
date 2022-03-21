@@ -20,6 +20,7 @@
 	"activationEvents": [
     "onStartupFinished",
 		"onCommand:extension.selectCluster",
+		"onCommand:extension.selectProfile",
     "onCommand:extension.clearSelectedCluster",
     "onCommand:extension.executeFile",
     "onCommand:extension.executeSelection"
@@ -30,6 +31,11 @@
 			{
 				"command": "extension.selectCluster",
 				"title": "Select cluster",
+        "category": "RDS Data API"
+			},
+      {
+				"command": "extension.selectProfile",
+				"title": "Select AWS profile",
         "category": "RDS Data API"
 			},
       {

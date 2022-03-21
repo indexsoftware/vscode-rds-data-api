@@ -18,6 +18,10 @@
     <td>Choose a cluster, secret & database based on what's available to</td>
   </tr>
   <tr>
+    <td>Select AWS profile</td>
+    <td>Choose an aws profile, based on the profiles you have configured</td>
+  </tr>
+  <tr>
     <td>Clear selected cluster</td>
     <td>Clear the selected cluster, secret & database from the global store</td>
   </tr>

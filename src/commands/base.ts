@@ -23,6 +23,10 @@ export default class Base {
     return this.context.globalState.get('selectedDatabase') as string | undefined;
   }
 
+  public selectedProfile() {
+    return this.context.globalState.get('selectedProfile') as string | undefined;
+  }
+
   async executeQuery(query?: string, parameters?: string): Promise<ExecuteStatementResponse | object> {
     const command = this.parseQuery(`
       aws rds-data execute-statement
@@ -32,6 +36,7 @@ export default class Base {
       --include-result-metadata
       --parameters ${JSON.stringify(parameters || '[]')}
       --sql "${query}"
+      --profile ${this.selectedProfile() || 'default'}
     `);
     try {
       const response: string = await new Promise((resolve, reject) => exec(command, (error, stdout) => {

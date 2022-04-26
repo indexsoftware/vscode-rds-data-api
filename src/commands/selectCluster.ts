@@ -1,16 +1,31 @@
-import { ExtensionContext, commands, window, StatusBarItem } from 'vscode';
-import { execSync } from 'child_process';
+import { ExtensionContext, commands, window, StatusBarItem, ProgressLocation } from 'vscode';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 import { DescribeDBClustersCommandOutput } from '@aws-sdk/client-rds';
 import { ListSecretsCommandOutput } from '@aws-sdk/client-secrets-manager';
 import Base from './base';
+
+const execAsync = promisify(exec);
 
 export default class SelectCluster extends Base {
   constructor(context: ExtensionContext, statusBarItem: StatusBarItem) {
     super(context, statusBarItem);
 
     commands.registerCommand('extension.selectCluster', async () => {
-      const DBClustersResponse: DescribeDBClustersCommandOutput = JSON.parse(execSync('aws rds describe-db-clusters').toString() || '{}');
-      const SecretsResponse: ListSecretsCommandOutput = JSON.parse(execSync('aws secretsmanager list-secrets').toString() || '{}');
+      const responses = await window.withProgress({ location: ProgressLocation.Notification, title: 'Fetching RDS clusters...' }, async (progress) => {
+        const DBClustersResponse = await execAsync('aws rds describe-db-clusters');
+        progress.report({ message: 'Fetching Secretsmanager secrets...' });
+
+        const SecretsResponse = await execAsync('aws secretsmanager list-secrets');
+        progress.report({ message: 'Everything fetched!' });
+
+        return new Promise<{ DBClustersResponse: any, SecretsResponse: any }>((resolve) => resolve({
+          DBClustersResponse: JSON.parse(DBClustersResponse.stdout || '{}'),
+          SecretsResponse: JSON.parse(SecretsResponse.stdout || '{}'),
+        }));
+      });
+      const DBClustersResponse: DescribeDBClustersCommandOutput = responses.DBClustersResponse;
+      const SecretsResponse: ListSecretsCommandOutput = responses.SecretsResponse;
       
       if (!DBClustersResponse.DBClusters) return false;
     

@@ -21,7 +21,7 @@ export default class ExecuteFile extends Base {
       const defaultValue = '[{ "name": "key", "value": { "stringValue": "value" }}]';
       const savedParameters = context.globalState.get('savedParameters') as string | undefined;
       const parameters = window.createInputBox();
-      parameters.value = savedParameters || defaultValue;
+      parameters.value = savedParameters !== undefined ? savedParameters : defaultValue;
       parameters.placeholder = `For example: ${defaultValue}`;
       parameters.prompt = 'Query parameters';
       parameters.ignoreFocusOut = true;

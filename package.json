@@ -2,7 +2,7 @@
 	"name": "rds-data-api",
 	"displayName": "RDS Data API",
 	"description": "Use the RDS Data API right inside vscode",
-	"version": "0.1.0",
+	"version": "0.0.9",
 	"publisher": "indexsoftware",
   "icon": "images/icon.png",
 	"repository": {
@@ -61,11 +61,11 @@
 		"watch": "tsc -watch -p ./"
 	},
 	"devDependencies": {
-    "@aws-sdk/client-rds": "^3.76.0",
-    "@aws-sdk/client-rds-data": "^3.76.0",
-    "@aws-sdk/client-secrets-manager": "^3.76.0",
-		"@types/node": "^14.18.15",
-		"@types/vscode": "^1.63.0",
-		"typescript": "^4.6.3"
+    "@aws-sdk/client-rds": "3.245.0",
+    "@aws-sdk/client-rds-data": "3.245.0",
+    "@aws-sdk/client-secrets-manager": "3.245.0",
+		"@types/node": "18.11.18",
+		"@types/vscode": "1.74.0",
+		"typescript": "4.9.4"
 	}
 }

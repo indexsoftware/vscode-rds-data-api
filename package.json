@@ -2,7 +2,7 @@
 	"name": "rds-data-api",
 	"displayName": "RDS Data API",
 	"description": "Use the RDS Data API right inside vscode",
-	"version": "0.0.9",
+	"version": "0.1.1",
 	"publisher": "indexsoftware",
   "icon": "images/icon.png",
 	"repository": {
